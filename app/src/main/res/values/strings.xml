@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="title_form">Register Form</string>
+    <string name="full_name_hint">Full Name</string>
+    <string name="email_hint">Email</string>
+    <string name="username_hint">Username</string>
+    <string name="gender_label">Gender</string>
+    <string name="gender_male_label">Male</string>
+    <string name="gender_female_label">Female</string>
+    <string name="hobby_label">Hobby</string>
+    <string name="hobby_foodie_label">Foodie</string>
+    <string name="hobby_traveling_label">Traveling</string>
+    <string name="password_hint">Password</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+
+    <string name="register_btn">Register</string>
+    <string name="splash_screen">Splash Screen</string>
+</resources>

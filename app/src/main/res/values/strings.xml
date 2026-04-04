@@ -10,6 +10,7 @@
     <string name="hobby_label">Hobby</string>
     <string name="hobby_foodie_label">Foodie</string>
     <string name="hobby_traveling_label">Traveling</string>
+    <string name="city_label">City</string>
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
 

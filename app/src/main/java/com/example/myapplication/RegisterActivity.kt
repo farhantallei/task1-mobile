@@ -3,9 +3,12 @@ package com.example.myapplication
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.RadioGroup
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
@@ -22,6 +25,7 @@ import com.example.myapplication.validator.PasswordValidator
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import androidx.core.content.edit
+import com.example.myapplication.validator.CityValidator
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -48,6 +52,8 @@ class RegisterActivity : AppCompatActivity() {
         val hobbyFoodie = findViewById<CheckBox>(R.id.hobby_foodie)
         val hobbyTraveling = findViewById<CheckBox>(R.id.hobby_traveling)
         val hobbyError = findViewById<TextView>(R.id.hobby_error)
+        val city = findViewById<Spinner>(R.id.city)
+        val cityError = findViewById<TextView>(R.id.city_error)
         val password = findViewById<TextInputEditText>(R.id.password)
         val passwordField = findViewById<TextInputLayout>(R.id.password_field)
         val confirmPassword = findViewById<TextInputEditText>(R.id.confirm_password)
@@ -59,6 +65,13 @@ class RegisterActivity : AppCompatActivity() {
         val passwordValidator = PasswordValidator()
         val genderValidator = GenderValidator()
         val hobbyValidator = HobbyValidator()
+        val cityValidator = CityValidator()
+
+        val cities = listOf("Select City", "Bandung", "Jakarta", "Surabaya")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, cities)
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        city.adapter = adapter
 
         fun showError(textView: TextView, error: String?) {
             if (error != null) {
@@ -69,8 +82,15 @@ class RegisterActivity : AppCompatActivity() {
             }
         }
 
+        fun validateCity(): String? {
+            val error = cityValidator.execute(city.selectedItemPosition)
+            showError(cityError, error)
+            return error
+        }
+
         fun validateHobby(): String? {
-            val error = hobbyValidator.execute(listOf(hobbyFoodie.isChecked, hobbyTraveling.isChecked))
+            val error =
+                hobbyValidator.execute(listOf(hobbyFoodie.isChecked, hobbyTraveling.isChecked))
             showError(hobbyError, error)
             return error
         }
@@ -90,6 +110,7 @@ class RegisterActivity : AppCompatActivity() {
                 ConfirmPasswordValidator(passwordValue).execute(confirmPassword.text.toString())
             val genderErrorMsg = validateGender()
             val hobbyErrorMsg = validateHobby()
+            val cityErrorMsg = validateCity()
 
             fullNameField.error = fullNameError
             emailField.error = emailError
@@ -102,7 +123,8 @@ class RegisterActivity : AppCompatActivity() {
                 passwordError,
                 confirmPasswordError,
                 genderErrorMsg,
-                hobbyErrorMsg
+                hobbyErrorMsg,
+                cityErrorMsg
             ).all { it == null }
         }
 
@@ -132,6 +154,23 @@ class RegisterActivity : AppCompatActivity() {
 
         hobbyFoodie.setOnCheckedChangeListener { _, _ -> validateHobby() }
         hobbyTraveling.setOnCheckedChangeListener { _, _ -> validateHobby() }
+
+        var cityTouched = false
+        city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (!cityTouched) {
+                    cityTouched = true; return
+                }
+                validateCity()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
 
         registerBtn.setOnClickListener {
             if (validateForm()) {

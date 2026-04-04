@@ -51,6 +51,7 @@ class RegisterActivity : AppCompatActivity() {
         val genderError = findViewById<TextView>(R.id.gender_error)
         val hobbyFoodie = findViewById<CheckBox>(R.id.hobby_foodie)
         val hobbyTraveling = findViewById<CheckBox>(R.id.hobby_traveling)
+        val hobbyCoding = findViewById<CheckBox>(R.id.hobby_coding)
         val hobbyError = findViewById<TextView>(R.id.hobby_error)
         val city = findViewById<Spinner>(R.id.city)
         val cityError = findViewById<TextView>(R.id.city_error)
@@ -90,7 +91,13 @@ class RegisterActivity : AppCompatActivity() {
 
         fun validateHobby(): String? {
             val error =
-                hobbyValidator.execute(listOf(hobbyFoodie.isChecked, hobbyTraveling.isChecked))
+                hobbyValidator.execute(
+                    listOf(
+                        hobbyFoodie.isChecked,
+                        hobbyTraveling.isChecked,
+                        hobbyCoding.isChecked
+                    )
+                )
             showError(hobbyError, error)
             return error
         }
@@ -154,6 +161,7 @@ class RegisterActivity : AppCompatActivity() {
 
         hobbyFoodie.setOnCheckedChangeListener { _, _ -> validateHobby() }
         hobbyTraveling.setOnCheckedChangeListener { _, _ -> validateHobby() }
+        hobbyCoding.setOnCheckedChangeListener { _, _ -> validateHobby() }
 
         var cityTouched = false
         city.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -178,10 +186,24 @@ class RegisterActivity : AppCompatActivity() {
                     .setTitle("Confirmation")
                     .setMessage("Are you sure all the data is correct?")
                     .setPositiveButton("Yes") { _, _ ->
+                        val genderValue = when (gender.checkedRadioButtonId) {
+                            R.id.gender_male -> "Male"
+                            R.id.gender_female -> "Female"
+                            else -> ""
+                        }
+                        val hobbies = buildList {
+                            if (hobbyFoodie.isChecked) add(hobbyFoodie.text.toString())
+                            if (hobbyTraveling.isChecked) add(hobbyTraveling.text.toString())
+                            if (hobbyCoding.isChecked) add(hobbyCoding.text.toString())
+                        }.joinToString(", ")
+
                         sharedPref.edit {
                             putBoolean("isRegistered", true)
                             putString("name", fullName.text.toString())
                             putString("email", email.text.toString())
+                            putString("gender", genderValue)
+                            putString("hobbies", hobbies)
+                            putString("city", city.selectedItem.toString())
                         }
 
                         startActivity(Intent(this, MainActivity::class.java))

@@ -10,10 +10,14 @@
     <string name="hobby_label">Hobby</string>
     <string name="hobby_foodie_label">Foodie</string>
     <string name="hobby_traveling_label">Traveling</string>
+    <string name="hobby_coding_label">Coding</string>
     <string name="city_label">City</string>
+    <string name="logout_btn">Logout</string>
+    <string name="copy_email_btn">Copy Email</string>
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
 
+    <string name="copy_email_hint">Long press to copy all info</string>
     <string name="register_btn">Register</string>
     <string name="splash_screen">Splash Screen</string>
 </resources>
